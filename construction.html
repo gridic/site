@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GRIDIC Construction — Every millimeter is a commitment.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --white: #f4f4f2;
+      --off: #ececea;
+      --surface: #e8e8e6;
+      --surface2: #dcdcda;
+      --black: #0e0e0e;
+      --charcoal: #1c1c1c;
+      --steel: #4a4a4a;
+      --mid: #888;
+      --dim: rgba(14,14,14,0.45);
+      --accent: #3a3a3a;
+      --gold: #b8956a;
+      --tr: 0.65s cubic-bezier(0.76,0,0.24,1);
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--white);
+      color: var(--black);
+      font-family: 'Noto Sans KR', sans-serif;
+      cursor: none;
+      overflow-x: hidden;
+    }
+
+    #cursor { position:fixed;width:8px;height:8px;background:var(--black);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .3s,height .3s; }
+    #cursor-ring { position:fixed;width:32px;height:32px;border:1px solid rgba(14,14,14,.3);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .5s,height .5s; }
+
+    .page-transition { position:fixed;inset:0;background:var(--white);z-index:9990;pointer-events:none;opacity:0;transition:opacity .5s; }
+    .page-transition.active { opacity:1;pointer-events:all; }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: clamp(1.2rem, 2.5vw, 2rem) clamp(1.5rem, 5vw, 4rem);
+      background: linear-gradient(to bottom, rgba(244,244,242,0.95) 0%, transparent 100%);
+    }
+    .nav__logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem; font-weight: 300; letter-spacing: 0.45em;
+      color: var(--black); text-decoration: none;
+    }
+    .nav__logo span { color: var(--steel); }
+    .nav__links { display: flex; gap: 2.5rem; align-items: center; }
+    .nav__link {
+      font-size: 0.62rem; font-weight: 300; letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--mid); text-decoration: none; transition: color .3s;
+    }
+    .nav__link:hover { color: var(--black); }
+    .nav__contact {
+      font-size: 0.62rem; letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--black); text-decoration: none;
+      border: 1px solid rgba(14,14,14,.35);
+      padding: 0.55rem 1.2rem; transition: background .3s, color .3s;
+    }
+    .nav__contact:hover { background: var(--black); color: var(--white); }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: clamp(2rem, 5vw, 5rem) clamp(1.5rem, 7vw, 7rem);
+      padding-top: 8rem;
+      position: relative; overflow: hidden;
+      background: var(--white);
+    }
+    .hero__bg-accent {
+      position: absolute; top: 0; right: 0;
+      width: 40%; height: 100%;
+      background: linear-gradient(to left, rgba(14,14,14,0.03) 0%, transparent 100%);
+      pointer-events: none;
+    }
+    .hero__rule {
+      position: absolute;
+      top: 0; bottom: 0;
+      right: clamp(1.5rem, 7vw, 7rem);
+      width: 1px;
+      background: linear-gradient(to bottom, transparent, rgba(14,14,14,0.08) 30%, rgba(14,14,14,0.08) 70%, transparent);
+    }
+    .hero__grid-lines {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(14,14,14,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(14,14,14,0.03) 1px, transparent 1px);
+      background-size: 80px 80px;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black, transparent);
+    }
+    .hero__eyebrow {
+      font-size: 0.6rem; font-weight: 300; letter-spacing: 0.5em;
+      text-transform: uppercase; color: var(--steel);
+      margin-bottom: 2rem; position: relative; z-index: 2;
+      opacity: 0; transform: translateY(20px);
+      animation: fadeUp 1s ease 0.3s forwards;
+    }
+    .hero__headline {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3.5rem, 9vw, 11rem);
+      font-weight: 300; line-height: 0.9; letter-spacing: -0.02em;
+      color: var(--black); position: relative; z-index: 2;
+      opacity: 0; transform: translateY(30px);
+      animation: fadeUp 1.2s ease 0.5s forwards;
+    }
+    .hero__headline em { font-style: italic; color: rgba(14,14,14,0.35); }
+    .hero__sub {
+      margin-top: 3rem; display: flex; align-items: flex-end; gap: 4rem;
+      position: relative; z-index: 2;
+      opacity: 0; animation: fadeUp 1s ease 0.9s forwards;
+    }
+    .hero__subtext {
+      font-size: clamp(0.75rem, 1.2vw, 0.95rem); font-weight: 300;
+      line-height: 1.9; color: var(--dim); max-width: 380px;
+    }
+    .hero__cta {
+      flex-shrink: 0; display: flex; align-items: center; gap: 1rem;
+      color: var(--steel); font-size: 0.65rem; letter-spacing: 0.3em;
+      text-transform: uppercase; text-decoration: none; transition: gap .4s;
+    }
+    .hero__cta:hover { gap: 1.6rem; }
+    .hero__cta-line { width: 40px; height: 1px; background: var(--steel); transition: width .4s; }
+    .hero__cta:hover .hero__cta-line { width: 60px; }
+
+    @keyframes fadeUp { to { opacity:1; transform:translateY(0); } }
+
+    /* STATS BAR */
+    .stats {
+      background: var(--black);
+      padding: 2.5rem clamp(1.5rem, 7vw, 7rem);
+      display: flex; gap: 0;
+    }
+    .stat {
+      flex: 1; padding: 0 2rem;
+      border-left: 1px solid rgba(255,255,255,0.08);
+    }
+    .stat:first-child { padding-left: 0; border-left: none; }
+    .stat__num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.8rem, 3vw, 3rem); font-weight: 300;
+      color: var(--white); line-height: 1;
+    }
+    .stat__label {
+      font-size: 0.58rem; font-weight: 300;
+      letter-spacing: 0.3em; text-transform: uppercase;
+      color: rgba(255,255,255,0.3); margin-top: 0.5rem;
+    }
+
+    /* SECTIONS */
+    section.pad { padding: clamp(5rem, 10vw, 9rem) clamp(1.5rem, 7vw, 7rem); }
+    .section__label {
+      font-size: 0.58rem; letter-spacing: 0.5em; text-transform: uppercase;
+      color: var(--steel); margin-bottom: 3rem;
+      display: flex; align-items: center; gap: 1.2rem;
+    }
+    .section__label::after {
+      content: ''; display: block; width: 40px; height: 1px; background: rgba(14,14,14,.15);
+    }
+
+    /* IDENTITY */
+    .identity { background: var(--white); }
+    .identity__text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.6rem, 3.5vw, 3.8rem); font-weight: 300;
+      line-height: 1.4; color: var(--black); max-width: 820px;
+    }
+    .identity__text em { font-style: italic; color: rgba(14,14,14,.35); }
+    .identity__footnote {
+      margin-top: 3rem; padding-top: 2rem;
+      border-top: 1px solid rgba(14,14,14,0.08);
+      font-size: 0.75rem; font-weight: 300; color: var(--mid); line-height: 1.8; max-width: 500px;
+    }
+
+    /* CAPABILITIES */
+    .capabilities { background: var(--off); }
+    .capabilities__grid {
+      display: grid; grid-template-columns: repeat(2, 1fr);
+      gap: 1px; background: rgba(14,14,14,0.08); margin-top: 1rem;
+    }
+    .cap-card {
+      background: var(--off); padding: clamp(2rem, 4vw, 3.5rem);
+      position: relative; overflow: hidden; transition: background var(--tr);
+    }
+    .cap-card:hover { background: var(--white); }
+    .cap-card::before {
+      content: ''; position: absolute; top: 0; left: 0;
+      width: 0; height: 2px; background: var(--black); transition: width var(--tr);
+    }
+    .cap-card:hover::before { width: 100%; }
+    .cap-card__num { font-size: 0.65rem; letter-spacing: 0.35em; color: var(--steel); margin-bottom: 1.5rem; opacity: 0.6; }
+    .cap-card__title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.2rem, 2vw, 1.8rem); font-weight: 300;
+      color: var(--black); margin-bottom: 1rem; line-height: 1.25;
+    }
+    .cap-card__desc { font-size: 0.73rem; font-weight: 300; line-height: 1.9; color: var(--mid); }
+
+    /* QUALITY STANDARD */
+    .quality { background: var(--black); color: var(--white); }
+    .quality .section__label { color: rgba(255,255,255,0.3); }
+    .quality .section__label::after { background: rgba(255,255,255,0.1); }
+    .quality__layout { display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center; }
+    .quality__heading {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 4vw, 4.5rem); font-weight: 300;
+      line-height: 1.1; color: var(--white);
+    }
+    .quality__heading span { font-style: italic; color: rgba(255,255,255,0.35); }
+    .quality__list { display: flex; flex-direction: column; gap: 0; }
+    .quality__item {
+      padding: 1.8rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      display: flex; justify-content: space-between; align-items: center;
+      transition: padding-left var(--tr);
+    }
+    .quality__item:hover { padding-left: 0.5rem; }
+    .quality__item:first-child { border-top: 1px solid rgba(255,255,255,0.06); }
+    .quality__item-label { font-size: 0.7rem; font-weight: 300; letter-spacing: 0.2em; color: rgba(255,255,255,0.5); }
+    .quality__item-value {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1rem, 1.8vw, 1.5rem); font-weight: 300; color: var(--white);
+    }
+
+    /* PROCESS */
+    .process { background: var(--surface); }
+    .process__steps { display: flex; gap: 0; position: relative; }
+    .process__steps::before {
+      content: ''; position: absolute;
+      top: 2.2rem; left: 0; right: 0; height: 1px;
+      background: linear-gradient(to right, var(--black), rgba(14,14,14,.1));
+    }
+    .process__step { flex: 1; padding: 3rem 2.5rem 2.5rem 0; }
+    .process__step-num {
+      font-size: 0.65rem; letter-spacing: 0.3em; color: var(--steel);
+      display: flex; align-items: center; gap: 0.7rem; margin-bottom: 2rem;
+    }
+    .process__step-num::before {
+      content: ''; width: 8px; height: 8px;
+      border: 1px solid var(--steel); border-radius: 50%; flex-shrink: 0;
+      background: var(--surface);
+    }
+    .process__step-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1rem, 1.6vw, 1.4rem); font-weight: 300;
+      color: var(--black); margin-bottom: 0.8rem; line-height: 1.3;
+    }
+    .process__step-desc { font-size: 0.7rem; font-weight: 300; line-height: 1.9; color: var(--mid); }
+
+    /* PORTFOLIO */
+    .portfolio { background: var(--white); }
+    .portfolio__intro { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 3rem; gap: 2rem; }
+    .portfolio__heading { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.8rem, 3vw, 3rem); font-weight: 300; color: var(--black); }
+    .portfolio__note { font-size: 0.65rem; font-weight: 300; color: var(--mid); letter-spacing: .15em; text-align: right; line-height: 1.8; }
+    .portfolio__grid { display: grid; grid-template-columns: 1fr 2fr 1fr; grid-template-rows: auto auto; gap: 3px; }
+    .portfolio__item { background: var(--off); position: relative; overflow: hidden; aspect-ratio: 4/3; }
+    .portfolio__item:nth-child(2) { grid-row: span 2; aspect-ratio: unset; }
+    .portfolio__item-placeholder {
+      width:100%;height:100%;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-end;
+      padding:1.8rem;background:linear-gradient(135deg,var(--off) 0%,rgba(14,14,14,0.03) 100%);
+      position:relative;min-height:200px;
+    }
+    .portfolio__item::after { content:'';position:absolute;inset:0;background:rgba(0,0,0,0);transition:background .4s; }
+    .portfolio__item:hover::after { background:rgba(0,0,0,0.05); }
+    .portfolio__item-tag { font-size: 0.58rem; letter-spacing: .35em; text-transform: uppercase; color: var(--steel); margin-bottom: .4rem; }
+    .portfolio__item-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(.9rem,1.5vw,1.3rem); font-weight: 300; color: rgba(14,14,14,.6); }
+    .portfolio__item-cross { position: absolute; top: 1.2rem; right: 1.2rem; width: 24px; height: 24px; opacity: 0.1; }
+    .portfolio__item-cross::before,.portfolio__item-cross::after { content:'';position:absolute;background:var(--black); }
+    .portfolio__item-cross::before { width:1px;height:100%;top:0;left:50%; }
+    .portfolio__item-cross::after { width:100%;height:1px;top:50%;left:0; }
+
+    /* CONTACT */
+    .contact { background: var(--off); }
+    .contact__heading { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem,5vw,5.5rem); font-weight: 300; color: var(--black); line-height: 1.05; margin-bottom: 1rem; }
+    .contact__heading span { color: var(--steel); font-style: italic; }
+    .contact__sub { font-size: .8rem; font-weight: 300; color: var(--mid); line-height: 1.9; margin-bottom: 4rem; max-width: 440px; }
+    .contact__form { display: flex; flex-direction: column; gap: 0; max-width: 700px; }
+    .form__row { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; }
+    .form__field { display: flex; flex-direction: column; border-bottom: 1px solid rgba(14,14,14,.1); padding: 1.8rem 0; transition: border-color .3s; }
+    .form__field:focus-within { border-color: var(--black); }
+    .form__label { font-size: .55rem; letter-spacing: .4em; text-transform: uppercase; color: var(--mid); margin-bottom: .8rem; }
+    .form__input,.form__select,.form__textarea { background: transparent; border: none; outline: none; color: var(--black); font-family: 'Noto Sans KR', sans-serif; font-size: .85rem; font-weight: 300; cursor: none; }
+    .form__select option { background: var(--off); }
+    .form__textarea { resize: none; min-height: 100px; line-height: 1.8; }
+    .form__input::placeholder,.form__textarea::placeholder { color: rgba(14,14,14,.2); }
+    .form__submit {
+      margin-top: 3rem; display: flex; align-items: center; gap: 1.2rem;
+      background: none; border: 1px solid rgba(14,14,14,.35);
+      color: var(--black); font-family: 'Noto Sans KR', sans-serif;
+      font-size: .65rem; letter-spacing: .35em; text-transform: uppercase;
+      padding: 1.1rem 2.2rem; cursor: none;
+      transition: background .3s, color .3s, gap .3s; align-self: flex-start;
+    }
+    .form__submit:hover { background: var(--black); color: var(--white); gap: 1.8rem; }
+
+    /* FOOTER */
+    footer {
+      padding: 2.5rem clamp(1.5rem, 7vw, 7rem);
+      border-top: 1px solid rgba(14,14,14,0.08);
+      display: flex; justify-content: space-between; align-items: center;
+      background: var(--white);
+    }
+    .footer__copy { font-size: .58rem; letter-spacing: .2em; color: rgba(14,14,14,.25); }
+    .footer__back { font-size: .58rem; letter-spacing: .3em; text-transform: uppercase; color: var(--mid); text-decoration: none; transition: color .3s; }
+    .footer__back:hover { color: var(--black); }
+
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity .9s ease, transform .9s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    @media (max-width: 768px) {
+      body { cursor: auto; }
+      #cursor, #cursor-ring { display: none; }
+      .stats { flex-wrap: wrap; gap: 2rem; }
+      .stat { flex: 1 1 40%; }
+      .capabilities__grid, .form__row { grid-template-columns: 1fr; }
+      .quality__layout { grid-template-columns: 1fr; gap: 3rem; }
+      .process__steps { flex-direction: column; }
+      .process__steps::before { display: none; }
+      .portfolio__grid { grid-template-columns: 1fr 1fr; }
+      .portfolio__item:nth-child(2) { grid-column: span 2; }
+      nav .nav__links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="cursor"></div>
+  <div id="cursor-ring"></div>
+  <div class="page-transition" id="pageTransition"></div>
+
+  <nav>
+    <a href="index.html" class="nav__logo">GRDIC <span>·</span> CONSTRUCTION</a>
+    <div class="nav__links">
+      <a href="#capabilities" class="nav__link">역량</a>
+      <a href="#quality" class="nav__link">품질 기준</a>
+      <a href="#portfolio" class="nav__link">포트폴리오</a>
+      <a href="creative.html" class="nav__link">Creative →</a>
+    </div>
+    <a href="#contact" class="nav__contact">시공 문의</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero__bg-accent"></div>
+    <div class="hero__grid-lines"></div>
+    <div class="hero__rule"></div>
+    <p class="hero__eyebrow">GRIDIC CONSTRUCTION — 02</p>
+    <h1 class="hero__headline">
+      Every millimeter<br>
+      <em>is a commitment.</em>
+    </h1>
+    <div class="hero__sub">
+      <p class="hero__subtext">모든 마감은 약속입니다.<br>GRIDIC Construction은 도면 위의 상상을<br>오차 없는 디테일로 완성합니다.</p>
+      <a href="#contact" class="hero__cta">
+        <div class="hero__cta-line"></div>
+        시공 문의하기
+      </a>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <div class="stats">
+    <div class="stat">
+      <p class="stat__num">0mm</p>
+      <p class="stat__label">Tolerance on Detail</p>
+    </div>
+    <div class="stat">
+      <p class="stat__num">DQC</p>
+      <p class="stat__label">Design Quality Control</p>
+    </div>
+    <div class="stat">
+      <p class="stat__num">100%</p>
+      <p class="stat__label">On-site Supervision</p>
+    </div>
+    <div class="stat">
+      <p class="stat__num">End-to-End</p>
+      <p class="stat__label">Project Management</p>
+    </div>
+  </div>
+
+  <!-- IDENTITY -->
+  <section class="identity pad reveal">
+    <p class="section__label">Identity</p>
+    <p class="identity__text">
+      우리는 '짓는다'는 행위에<br>
+      전문가적 자부심을 담습니다.<br><br>
+      <em>화려한 렌더링이 아닌,<br>
+      완공된 공간의 디테일이 우리의 포트폴리오입니다.</em>
+    </p>
+    <p class="identity__footnote">
+      설립 2026.03 · 서울특별시 광진구 천호대로101길 43<br>
+      공간 시공 · 현장 디테일 설계 · 퀄리티 컨트롤 · 현장 운영
+    </p>
+  </section>
+
+  <!-- CAPABILITIES -->
+  <section class="capabilities pad" id="capabilities">
+    <p class="section__label">Core Capabilities</p>
+    <div class="capabilities__grid">
+      <div class="cap-card reveal">
+        <p class="cap-card__num">01</p>
+        <h3 class="cap-card__title">Space Build &<br>Construction</h3>
+        <p class="cap-card__desc">기획 의도를 100% 구현하는 하이엔드 공간 시공 및 빌드.<br>도면이 현실이 되는 순간, GRIDIC이 함께합니다.</p>
+      </div>
+      <div class="cap-card reveal" style="transition-delay:.1s">
+        <p class="cap-card__num">02</p>
+        <h3 class="cap-card__title">On-site Detail<br>Engineering</h3>
+        <p class="cap-card__desc">눈에 보이지 않는 곳까지 완성도를 추구하는 현장 디테일 설계.<br>마감의 질이 공간의 품격을 결정합니다.</p>
+      </div>
+      <div class="cap-card reveal" style="transition-delay:.2s">
+        <p class="cap-card__num">03</p>
+        <h3 class="cap-card__title">Site Operations &<br>Environment</h3>
+        <p class="cap-card__desc">일정, 자재, 인력을 정밀하게 조율하는 체계적인 현장 운영.<br>예측 가능한 공정이 신뢰를 만듭니다.</p>
+      </div>
+      <div class="cap-card reveal" style="transition-delay:.3s">
+        <p class="cap-card__num">04</p>
+        <h3 class="cap-card__title">Design Quality<br>Control</h3>
+        <p class="cap-card__desc">기획 단계의 비전이 현장에서 그대로 살아있도록 하는 DQC 시스템.<br>Creative 파트와의 유기적 협업으로 완성합니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUALITY STANDARD -->
+  <section class="quality pad reveal" id="quality">
+    <p class="section__label">Quality Standard</p>
+    <div class="quality__layout">
+      <div>
+        <h2 class="quality__heading">The standard<br>is <span>non-negotiable.</span></h2>
+      </div>
+      <div class="quality__list">
+        <div class="quality__item">
+          <span class="quality__item-label">마감 기준</span>
+          <span class="quality__item-value">하이엔드 스펙 적용</span>
+        </div>
+        <div class="quality__item">
+          <span class="quality__item-label">공정 관리</span>
+          <span class="quality__item-value">전 공정 현장 감독</span>
+        </div>
+        <div class="quality__item">
+          <span class="quality__item-label">자재 선정</span>
+          <span class="quality__item-value">설계 의도 100% 반영</span>
+        </div>
+        <div class="quality__item">
+          <span class="quality__item-label">DQC 시스템</span>
+          <span class="quality__item-value">Creative 파트 협업</span>
+        </div>
+        <div class="quality__item">
+          <span class="quality__item-label">납기 준수</span>
+          <span class="quality__item-value">체계적 일정 관리</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section class="process pad reveal" id="process">
+    <p class="section__label">Build Process</p>
+    <div class="process__steps">
+      <div class="process__step">
+        <p class="process__step-num">01 · Briefing</p>
+        <h4 class="process__step-title">설계 도면<br>검토 & 브리핑</h4>
+        <p class="process__step-desc">Creative 파트의 설계 의도를<br>완벽히 이해하고 시공 계획을 수립합니다.</p>
+      </div>
+      <div class="process__step">
+        <p class="process__step-num">02 · Planning</p>
+        <h4 class="process__step-title">자재 & 공정<br>계획 수립</h4>
+        <p class="process__step-desc">최적의 자재를 선정하고<br>정밀한 공정 스케줄을 설계합니다.</p>
+      </div>
+      <div class="process__step">
+        <p class="process__step-num">03 · Build</p>
+        <h4 class="process__step-title">현장 시공 &<br>디테일 구현</h4>
+        <p class="process__step-desc">전 공정을 현장에서 직접 관리하며<br>설계 의도를 오차 없이 구현합니다.</p>
+      </div>
+      <div class="process__step">
+        <p class="process__step-num">04 · Handover</p>
+        <h4 class="process__step-title">퀄리티 검수 &<br>납품</h4>
+        <p class="process__step-desc">DQC 기준에 따른 최종 검수 후<br>완성된 공간을 클라이언트에게 인계합니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PORTFOLIO -->
+  <section class="portfolio pad reveal" id="portfolio">
+    <div class="portfolio__intro">
+      <h2 class="portfolio__heading">Completed<br>Projects</h2>
+      <p class="portfolio__note">포트폴리오 이미지는<br>프로젝트 진행 후 업데이트 예정입니다.</p>
+    </div>
+    <div class="portfolio__grid">
+      <div class="portfolio__item">
+        <div class="portfolio__item-placeholder">
+          <div class="portfolio__item-cross"></div>
+          <span class="portfolio__item-tag">Space Build · 2026</span>
+          <span class="portfolio__item-title">High-end Interior Build</span>
+        </div>
+      </div>
+      <div class="portfolio__item">
+        <div class="portfolio__item-placeholder">
+          <div class="portfolio__item-cross"></div>
+          <span class="portfolio__item-tag">Detail Engineering · 2026</span>
+          <span class="portfolio__item-title">Precision Finish — Coming Soon</span>
+        </div>
+      </div>
+      <div class="portfolio__item">
+        <div class="portfolio__item-placeholder">
+          <div class="portfolio__item-cross"></div>
+          <span class="portfolio__item-tag">Site Operations · 2026</span>
+          <span class="portfolio__item-title">Full-scale Construction</span>
+        </div>
+      </div>
+      <div class="portfolio__item">
+        <div class="portfolio__item-placeholder">
+          <div class="portfolio__item-cross"></div>
+          <span class="portfolio__item-tag">DQC · 2026</span>
+          <span class="portfolio__item-title">Quality Controlled</span>
+        </div>
+      </div>
+      <div class="portfolio__item">
+        <div class="portfolio__item-placeholder">
+          <div class="portfolio__item-cross"></div>
+          <span class="portfolio__item-tag">Integrated · 2026</span>
+          <span class="portfolio__item-title">End-to-End Project</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact pad reveal" id="contact">
+    <p class="section__label">Contact Us</p>
+    <h2 class="contact__heading">Let's Build<br>Something <span>Extraordinary.</span></h2>
+    <p class="contact__sub">프로젝트 규모와 방향성에 관계없이<br>GRIDIC은 언제나 대화로 시작합니다.</p>
+    <form class="contact__form" onsubmit="return false;">
+      <div class="form__row">
+        <div class="form__field">
+          <label class="form__label">Name · 성함</label>
+          <input class="form__input" type="text" placeholder="홍길동" />
+        </div>
+        <div class="form__field">
+          <label class="form__label">Contact · 연락처</label>
+          <input class="form__input" type="tel" placeholder="010-0000-0000" />
+        </div>
+      </div>
+      <div class="form__field">
+        <label class="form__label">E-mail · 이메일</label>
+        <input class="form__input" type="email" placeholder="hello@example.com" />
+      </div>
+      <div class="form__field">
+        <label class="form__label">Inquiry Type · 문의 유형</label>
+        <select class="form__select">
+          <option value="">선택해 주세요</option>
+          <option>Creative 기획 문의</option>
+          <option>Construction 시공 문의</option>
+          <option>통합 프로젝트 문의</option>
+        </select>
+      </div>
+      <div class="form__field">
+        <label class="form__label">Project Brief · 프로젝트 개요</label>
+        <textarea class="form__textarea" placeholder="시공 규모, 현장 위치, 희망 일정 등을 자유롭게 공유해 주세요."></textarea>
+      </div>
+      <button class="form__submit">Send Your Vision <span>→</span></button>
+    </form>
+  </section>
+
+  <footer>
+    <span class="footer__copy">© 2026 GRIDIC. All rights reserved. 통합 공간 크리에이티브 그룹</span>
+    <a href="index.html" class="footer__back">← Back to Gateway</a>
+  </footer>
+
+  <script>
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursor-ring');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+    document.addEventListener('mousemove', e => {
+      mx = e.clientX; my = e.clientY;
+      cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
+    });
+    (function animRing() {
+      rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+      ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+      requestAnimationFrame(animRing);
+    })();
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    const overlay = document.getElementById('pageTransition');
+    document.querySelectorAll('a[href]').forEach(link => {
+      const href = link.getAttribute('href');
+      if (!href || href.startsWith('#') || href.startsWith('http')) return;
+      link.addEventListener('click', e => {
+        e.preventDefault();
+        overlay.classList.add('active');
+        setTimeout(() => { window.location.href = href; }, 480);
+      });
+    });
+    window.addEventListener('pageshow', () => overlay.classList.remove('active'));
+  </script>
+</body>
+</html>

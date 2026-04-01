@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GRIDIC — Create. Construct. Connect.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --black: #0e0e0e;
+      --charcoal: #1a1a1a;
+      --cold-white: #f4f4f2;
+      --off-white: #ececea;
+      --warm-gold: #b8956a;
+      --steel: #5a5a5a;
+      --mid-gray: #999;
+      --transition-slow: 0.85s cubic-bezier(0.76, 0, 0.24, 1);
+      --transition-med: 0.55s cubic-bezier(0.76, 0, 0.24, 1);
+    }
+
+    html, body {
+      width: 100%; height: 100%;
+      overflow: hidden;
+      cursor: none;
+    }
+
+    /* ── CUSTOM CURSOR ── */
+    #cursor {
+      position: fixed;
+      width: 10px; height: 10px;
+      background: var(--warm-gold);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: width 0.3s ease, height 0.3s ease, background 0.3s ease;
+    }
+    #cursor-ring {
+      position: fixed;
+      width: 36px; height: 36px;
+      border: 1px solid rgba(184,149,106,0.5);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: width 0.5s ease, height 0.5s ease, border-color 0.3s ease;
+    }
+    body.hovering-panel #cursor { width: 6px; height: 6px; }
+    body.hovering-panel #cursor-ring { width: 60px; height: 60px; border-color: rgba(184,149,106,0.9); }
+
+    /* ── LAYOUT ── */
+    .gateway {
+      display: flex;
+      width: 100vw; height: 100vh;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ── PANELS ── */
+    .panel {
+      position: relative;
+      height: 100%;
+      overflow: hidden;
+      transition: flex var(--transition-slow);
+      flex: 1;
+    }
+    .panel--creative {
+      background: var(--charcoal);
+      flex: 1;
+    }
+    .panel--construction {
+      background: var(--cold-white);
+      flex: 1;
+    }
+
+    .gateway:has(.panel--creative:hover) .panel--creative { flex: 1.7; }
+    .gateway:has(.panel--creative:hover) .panel--construction { flex: 0.6; }
+    .gateway:has(.panel--construction:hover) .panel--construction { flex: 1.7; }
+    .gateway:has(.panel--construction:hover) .panel--creative { flex: 0.6; }
+
+    /* ── PANEL INNER ── */
+    .panel__inner {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: clamp(2rem, 4vw, 4rem);
+      text-decoration: none;
+    }
+
+    /* ── NOISE TEXTURE OVERLAY ── */
+    .panel::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* ── PANEL DIM ON OPPOSITE HOVER ── */
+    .panel__dim {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0);
+      transition: background var(--transition-med);
+      z-index: 2;
+      pointer-events: none;
+    }
+    .gateway:has(.panel--creative:hover) .panel--construction .panel__dim {
+      background: rgba(0,0,0,0.08);
+    }
+    .gateway:has(.panel--construction:hover) .panel--creative .panel__dim {
+      background: rgba(0,0,0,0.35);
+    }
+
+    /* ── EYEBROW ── */
+    .panel__eyebrow {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: clamp(0.6rem, 0.8vw, 0.75rem);
+      font-weight: 400;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      position: relative;
+      z-index: 10;
+      transition: opacity var(--transition-med);
+    }
+    .panel--creative .panel__eyebrow { color: var(--mid-gray); }
+    .panel--construction .panel__eyebrow { color: var(--steel); }
+
+    /* ── PANEL NUMBER ── */
+    .panel__number {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(5rem, 18vw, 22rem);
+      font-weight: 300;
+      line-height: 0.85;
+      letter-spacing: -0.03em;
+      position: absolute;
+      z-index: 3;
+      transition: opacity var(--transition-med), transform var(--transition-slow);
+      pointer-events: none;
+    }
+    .panel--creative .panel__number {
+      color: rgba(255,255,255,0.04);
+      bottom: -2rem;
+      right: -1rem;
+    }
+    .panel--construction .panel__number {
+      color: rgba(0,0,0,0.04);
+      bottom: -2rem;
+      left: -1rem;
+    }
+    .panel--creative:hover .panel__number { transform: translateY(-1rem); opacity: 0.07; }
+    .panel--construction:hover .panel__number { transform: translateY(-1rem); opacity: 0.07; }
+
+    /* ── TITLE BLOCK ── */
+    .panel__title-block {
+      position: relative;
+      z-index: 10;
+    }
+    .panel__label {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: clamp(0.55rem, 0.7vw, 0.65rem);
+      font-weight: 300;
+      letter-spacing: 0.5em;
+      text-transform: uppercase;
+      margin-bottom: 0.8rem;
+      display: block;
+    }
+    .panel--creative .panel__label { color: var(--warm-gold); }
+    .panel--construction .panel__label { color: var(--steel); }
+
+    .panel__title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.2rem, 4.5vw, 6rem);
+      font-weight: 300;
+      line-height: 1.0;
+      letter-spacing: -0.02em;
+    }
+    .panel--creative .panel__title { color: var(--cold-white); }
+    .panel--construction .panel__title { color: var(--black); }
+
+    /* ── SUB COPY (hover reveal) ── */
+    .panel__subcopy {
+      margin-top: 2rem;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity var(--transition-med), transform var(--transition-med);
+      transition-delay: 0.1s;
+    }
+    .panel:hover .panel__subcopy {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .panel__subcopy-headline {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: clamp(1rem, 1.6vw, 1.6rem);
+      font-weight: 300;
+      line-height: 1.4;
+      margin-bottom: 1.2rem;
+    }
+    .panel--creative .panel__subcopy-headline { color: rgba(244,244,242,0.85); }
+    .panel--construction .panel__subcopy-headline { color: rgba(14,14,14,0.75); }
+
+    .panel__subcopy-tags {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+    .panel__subcopy-tag {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: clamp(0.55rem, 0.75vw, 0.7rem);
+      font-weight: 300;
+      letter-spacing: 0.2em;
+    }
+    .panel--creative .panel__subcopy-tag { color: rgba(244,244,242,0.45); }
+    .panel--construction .panel__subcopy-tag { color: rgba(14,14,14,0.4); }
+
+    /* ── CTA ── */
+    .panel__cta {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: clamp(0.6rem, 0.8vw, 0.72rem);
+      font-weight: 400;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      position: relative;
+      z-index: 10;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity var(--transition-med), transform var(--transition-med);
+      transition-delay: 0.18s;
+    }
+    .panel:hover .panel__cta {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .panel--creative .panel__cta { color: var(--warm-gold); }
+    .panel--construction .panel__cta { color: var(--steel); }
+
+    .panel__cta-line {
+      width: 0;
+      height: 1px;
+      transition: width 0.5s cubic-bezier(0.76, 0, 0.24, 1) 0.28s;
+    }
+    .panel--creative .panel__cta-line { background: var(--warm-gold); }
+    .panel--construction .panel__cta-line { background: var(--steel); }
+    .panel:hover .panel__cta-line { width: 32px; }
+
+    /* ── DIVIDER ── */
+    .divider {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: 1px;
+      height: 100%;
+      z-index: 20;
+      transform: translateX(-50%);
+      pointer-events: none;
+      transition: left var(--transition-slow);
+      overflow: visible;
+    }
+    .divider__line {
+      width: 1px;
+      height: 100%;
+      background: linear-gradient(
+        to bottom,
+        transparent 0%,
+        rgba(184,149,106,0.15) 20%,
+        rgba(184,149,106,0.4) 50%,
+        rgba(184,149,106,0.15) 80%,
+        transparent 100%
+      );
+    }
+    .gateway:has(.panel--creative:hover) .divider { left: 63%; }
+    .gateway:has(.panel--construction:hover) .divider { left: 37%; }
+
+    /* ── CENTER SLOGAN ── */
+    .slogan {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 30;
+      text-align: center;
+      pointer-events: none;
+      transition: opacity var(--transition-med), transform var(--transition-slow);
+      width: max-content;
+      max-width: 80vw;
+    }
+    .slogan__text {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: clamp(0.65rem, 1.1vw, 1rem);
+      line-height: 2.0;
+      letter-spacing: 0.12em;
+      color: rgba(184,149,106,0.7);
+      display: block;
+    }
+    .slogan__dot {
+      display: block;
+      width: 4px; height: 4px;
+      background: var(--warm-gold);
+      border-radius: 50%;
+      margin: 1rem auto 0;
+      opacity: 0.5;
+    }
+    .gateway:has(.panel:hover) .slogan {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.95);
+    }
+
+    /* ── WORDMARK (top center) ── */
+    .wordmark {
+      position: absolute;
+      top: clamp(1.5rem, 3vw, 2.5rem);
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 35;
+      text-align: center;
+      pointer-events: none;
+      transition: opacity var(--transition-med);
+    }
+    .wordmark__g {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(0.9rem, 1.4vw, 1.2rem);
+      font-weight: 300;
+      letter-spacing: 0.5em;
+      text-transform: uppercase;
+      color: var(--warm-gold);
+      opacity: 0.9;
+    }
+    .gateway:has(.panel:hover) .wordmark { opacity: 0; }
+
+    /* ── BOTTOM HINT ── */
+    .scroll-hint {
+      position: absolute;
+      bottom: clamp(1.5rem, 3vw, 2.5rem);
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 35;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      pointer-events: none;
+      transition: opacity var(--transition-med);
+    }
+    .scroll-hint__text {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 0.55rem;
+      font-weight: 300;
+      letter-spacing: 0.3em;
+      color: rgba(184,149,106,0.5);
+      text-transform: uppercase;
+    }
+    .scroll-hint__bar {
+      width: 1px; height: 30px;
+      background: linear-gradient(to bottom, rgba(184,149,106,0.5), transparent);
+      animation: barPulse 2s ease-in-out infinite;
+    }
+    @keyframes barPulse {
+      0%, 100% { opacity: 0.3; transform: scaleY(1); }
+      50% { opacity: 1; transform: scaleY(1.1); }
+    }
+    .gateway:has(.panel:hover) .scroll-hint { opacity: 0; }
+
+    /* ── PAGE ENTER ANIMATION ── */
+    .gateway { animation: pageReveal 1.4s cubic-bezier(0.76,0,0.24,1) both; }
+    @keyframes pageReveal {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .panel--creative { animation: slideInLeft 1.2s cubic-bezier(0.76,0,0.24,1) 0.2s both; }
+    .panel--construction { animation: slideInRight 1.2s cubic-bezier(0.76,0,0.24,1) 0.2s both; }
+    @keyframes slideInLeft {
+      from { transform: translateX(-3%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    @keyframes slideInRight {
+      from { transform: translateX(3%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    .slogan { animation: sloganReveal 1.5s ease 0.8s both; }
+    @keyframes sloganReveal {
+      from { opacity: 0; transform: translate(-50%, -44%); }
+      to { opacity: 1; transform: translate(-50%, -50%); }
+    }
+
+    /* ── PAGE TRANSITION OVERLAY ── */
+    .page-transition {
+      position: fixed;
+      inset: 0;
+      background: var(--black);
+      z-index: 999;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+    .page-transition.active { opacity: 1; pointer-events: all; }
+
+    /* ── MOBILE ── */
+    @media (max-width: 768px) {
+      html, body { overflow: auto; }
+      .gateway {
+        flex-direction: column;
+        height: auto;
+        min-height: 100vh;
+      }
+      .panel { flex: none !important; height: 50vh; }
+      .gateway:has(.panel--creative:hover) .panel--creative,
+      .gateway:has(.panel--creative:hover) .panel--construction,
+      .gateway:has(.panel--construction:hover) .panel--construction,
+      .gateway:has(.panel--construction:hover) .panel--creative {
+        flex: none !important;
+      }
+      .divider { display: none; }
+      .slogan { display: none; }
+      .wordmark { display: none; }
+      .scroll-hint { display: none; }
+      .panel__subcopy { opacity: 1; transform: none; }
+      .panel__cta { opacity: 1; transform: none; }
+      .panel__number { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Custom Cursor -->
+  <div id="cursor"></div>
+  <div id="cursor-ring"></div>
+
+  <!-- Page Transition Overlay -->
+  <div class="page-transition" id="pageTransition"></div>
+
+  <!-- WORDMARK -->
+  <div class="wordmark">
+    <span class="wordmark__g">GRIDIC</span>
+  </div>
+
+  <!-- CENTER SLOGAN -->
+  <div class="slogan">
+    <span class="slogan__text">Create the Vision,</span>
+    <span class="slogan__text">Construct the Reality,</span>
+    <span class="slogan__text">Connect the People.</span>
+    <span class="slogan__dot"></span>
+  </div>
+
+  <!-- DIVIDER -->
+  <div class="divider">
+    <div class="divider__line"></div>
+  </div>
+
+  <!-- SCROLL HINT -->
+  <div class="scroll-hint">
+    <span class="scroll-hint__text">Choose your path</span>
+    <div class="scroll-hint__bar"></div>
+  </div>
+
+  <!-- MAIN GATEWAY -->
+  <main class="gateway">
+
+    <!-- LEFT: CREATIVE -->
+    <section class="panel panel--creative">
+      <div class="panel__dim"></div>
+      <div class="panel__number">C</div>
+      <a href="creative.html" class="panel__inner" id="creativeLink">
+        <span class="panel__eyebrow">01 / 02</span>
+        <div class="panel__title-block">
+          <span class="panel__label">Creative</span>
+          <h2 class="panel__title">GRIDIC<br>CREATIVE</h2>
+          <div class="panel__subcopy">
+            <p class="panel__subcopy-headline">Vision begins here.<br>공간의 서사를 설계합니다.</p>
+            <div class="panel__subcopy-tags">
+              <span class="panel__subcopy-tag">Brand & Design Direction</span>
+              <span class="panel__subcopy-tag">Space Experience Consulting</span>
+              <span class="panel__subcopy-tag">Interior & Architectural Planning</span>
+              <span class="panel__subcopy-tag">Community & Network Design</span>
+            </div>
+          </div>
+        </div>
+        <div class="panel__cta">
+          <div class="panel__cta-line"></div>
+          <span>Explore Creative</span>
+        </div>
+      </a>
+    </section>
+
+    <!-- RIGHT: CONSTRUCTION -->
+    <section class="panel panel--construction">
+      <div class="panel__dim"></div>
+      <div class="panel__number">B</div>
+      <a href="construction.html" class="panel__inner" id="constructionLink">
+        <span class="panel__eyebrow">02 / 02</span>
+        <div class="panel__title-block">
+          <span class="panel__label">Construction</span>
+          <h2 class="panel__title">GRIDIC<br>CONSTRUCTION</h2>
+          <div class="panel__subcopy">
+            <p class="panel__subcopy-headline">Reality is built here.<br>상상을 오차 없이 구현합니다.</p>
+            <div class="panel__subcopy-tags">
+              <span class="panel__subcopy-tag">Space Build & Construction</span>
+              <span class="panel__subcopy-tag">On-site Detail Engineering</span>
+              <span class="panel__subcopy-tag">Site Operations & Environment</span>
+              <span class="panel__subcopy-tag">Design Quality Control</span>
+            </div>
+          </div>
+        </div>
+        <div class="panel__cta">
+          <div class="panel__cta-line"></div>
+          <span>Explore Construction</span>
+        </div>
+      </a>
+    </section>
+
+  </main>
+
+  <script>
+    // ── CUSTOM CURSOR
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursor-ring');
+    let mx = window.innerWidth/2, my = window.innerHeight/2;
+    let rx = mx, ry = my;
+
+    document.addEventListener('mousemove', e => {
+      mx = e.clientX; my = e.clientY;
+      cursor.style.left = mx + 'px';
+      cursor.style.top = my + 'px';
+    });
+
+    (function animateRing() {
+      rx += (mx - rx) * 0.12;
+      ry += (my - ry) * 0.12;
+      ring.style.left = rx + 'px';
+      ring.style.top = ry + 'px';
+      requestAnimationFrame(animateRing);
+    })();
+
+    // ── HOVER CLASS FOR CURSOR EXPANSION
+    document.querySelectorAll('.panel').forEach(panel => {
+      panel.addEventListener('mouseenter', () => document.body.classList.add('hovering-panel'));
+      panel.addEventListener('mouseleave', () => document.body.classList.remove('hovering-panel'));
+    });
+
+    // ── PAGE TRANSITION
+    const overlay = document.getElementById('pageTransition');
+    document.querySelectorAll('[href]').forEach(link => {
+      link.addEventListener('click', e => {
+        const href = link.getAttribute('href');
+        if (!href || href.startsWith('#') || href.startsWith('http')) return;
+        e.preventDefault();
+        overlay.classList.add('active');
+        setTimeout(() => { window.location.href = href; }, 480);
+      });
+    });
+
+    // Reveal on load (fade out overlay if coming back)
+    window.addEventListener('pageshow', () => {
+      overlay.classList.remove('active');
+    });
+  </script>
+</body>
+</html>
