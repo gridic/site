@@ -681,24 +681,24 @@
     <p class="section__label">Contact Us</p>
     <h2 class="contact__heading">Let's Build<br>Something <span>Extraordinary.</span></h2>
     <p class="contact__sub">프로젝트 규모와 방향성에 관계없이<br>GRIDIC은 언제나 대화로 시작합니다.</p>
-    <form class="contact__form" onsubmit="return false;">
+    <form class="contact__form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
       <div class="form__row">
         <div class="form__field">
           <label class="form__label">Name · 성함</label>
-          <input class="form__input" type="text" placeholder="홍길동" />
+          <input class="form__input" type="text" name="name" placeholder="홍길동" required />
         </div>
         <div class="form__field">
           <label class="form__label">Contact · 연락처</label>
-          <input class="form__input" type="tel" placeholder="010-0000-0000" />
+          <input class="form__input" type="tel" name="contact" placeholder="010-0000-0000" required />
         </div>
       </div>
       <div class="form__field">
         <label class="form__label">E-mail · 이메일</label>
-        <input class="form__input" type="email" placeholder="hello@example.com" />
+        <input class="form__input" type="email" name="email" placeholder="hello@example.com" required />
       </div>
       <div class="form__field">
         <label class="form__label">Inquiry Type · 문의 유형</label>
-        <select class="form__select">
+        <select class="form__select" name="inquiry_type" required>
           <option value="">선택해 주세요</option>
           <option>Creative 기획 문의</option>
           <option>Construction 시공 문의</option>
@@ -707,9 +707,9 @@
       </div>
       <div class="form__field">
         <label class="form__label">Project Brief · 프로젝트 개요</label>
-        <textarea class="form__textarea" placeholder="프로젝트의 방향성, 규모, 일정 등을 자유롭게 공유해 주세요."></textarea>
+        <textarea class="form__textarea" name="project_brief" placeholder="프로젝트의 방향성, 규모, 일정 등을 자유롭게 공유해 주세요." required></textarea>
       </div>
-      <button class="form__submit">
+      <button class="form__submit" type="submit">
         Send Your Vision <span class="form__submit-arrow">→</span>
       </button>
     </form>
