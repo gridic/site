@@ -261,6 +261,24 @@
     .portfolio__note { font-size: 0.65rem; font-weight: 300; color: var(--mid); letter-spacing: .15em; text-align: right; line-height: 1.8; }
     .portfolio__grid { display: grid; grid-template-columns: 1fr 2fr 1fr; grid-template-rows: auto auto; gap: 3px; }
     .portfolio__item { background: var(--off); position: relative; overflow: hidden; aspect-ratio: 4/3; }
+    .portfolio__img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .portfolio__item-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      transition: opacity .3s;
+    }
+    .portfolio__item:hover .portfolio__item-overlay { opacity: 1; }
     .portfolio__item:nth-child(2) { grid-row: span 2; aspect-ratio: unset; }
     .portfolio__item-placeholder {
       width:100%;height:100%;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-end;
@@ -494,38 +512,59 @@
     </div>
     <div class="portfolio__grid">
       <div class="portfolio__item">
-        <div class="portfolio__item-placeholder">
+        <img src="images/portfolio/construction1.jpg" alt="High-end Interior Build" class="portfolio__img" />
+        <div class="portfolio__item-overlay">
           <div class="portfolio__item-cross"></div>
           <span class="portfolio__item-tag">Space Build · 2026</span>
           <span class="portfolio__item-title">High-end Interior Build</span>
         </div>
       </div>
       <div class="portfolio__item">
-        <div class="portfolio__item-placeholder">
+        <img src="images/portfolio/construction2.jpg" alt="Precision Finish" class="portfolio__img" />
+        <div class="portfolio__item-overlay">
           <div class="portfolio__item-cross"></div>
           <span class="portfolio__item-tag">Detail Engineering · 2026</span>
           <span class="portfolio__item-title">Precision Finish — Coming Soon</span>
         </div>
       </div>
       <div class="portfolio__item">
-        <div class="portfolio__item-placeholder">
+        <img src="images/portfolio/construction3.jpg" alt="Full-scale Construction" class="portfolio__img" />
+        <div class="portfolio__item-overlay">
           <div class="portfolio__item-cross"></div>
           <span class="portfolio__item-tag">Site Operations · 2026</span>
           <span class="portfolio__item-title">Full-scale Construction</span>
         </div>
       </div>
       <div class="portfolio__item">
-        <div class="portfolio__item-placeholder">
+        <img src="images/portfolio/construction4.jpg" alt="Quality Controlled" class="portfolio__img" />
+        <div class="portfolio__item-overlay">
           <div class="portfolio__item-cross"></div>
           <span class="portfolio__item-tag">DQC · 2026</span>
           <span class="portfolio__item-title">Quality Controlled</span>
         </div>
       </div>
       <div class="portfolio__item">
-        <div class="portfolio__item-placeholder">
+        <img src="images/portfolio/construction5.jpg" alt="End-to-End Project" class="portfolio__img" />
+        <div class="portfolio__item-overlay">
           <div class="portfolio__item-cross"></div>
           <span class="portfolio__item-tag">Integrated · 2026</span>
           <span class="portfolio__item-title">End-to-End Project</span>
+        </div>
+      </div>
+      <div class="portfolio__item">
+        <img src="images/portfolio/construction6.jpg" alt="Project 6" class="portfolio__img" />
+        <div class="portfolio__item-overlay">
+          <div class="portfolio__item-cross"></div>
+          <span class="portfolio__item-tag">Category · 2026</span>
+          <span class="portfolio__item-title">Project Title 6</span>
+        </div>
+      </div>
+      <div class="portfolio__item">
+        <img src="images/portfolio/construction7.jpg" alt="Project 7" class="portfolio__img" />
+        <div class="portfolio__item-overlay">
+          <div class="portfolio__item-cross"></div>
+          <span class="portfolio__item-tag">Category · 2026</span>
+          <span class="portfolio__item-title">Project Title 7</span>
         </div>
       </div>
     </div>
