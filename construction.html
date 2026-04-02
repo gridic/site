@@ -259,28 +259,17 @@
     .portfolio__intro { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 3rem; gap: 2rem; }
     .portfolio__heading { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.8rem, 3vw, 3rem); font-weight: 300; color: var(--black); }
     .portfolio__note { font-size: 0.65rem; font-weight: 300; color: var(--mid); letter-spacing: .15em; text-align: right; line-height: 1.8; }
-    .portfolio__grid { display: grid; grid-template-columns: 1fr 2fr 1fr; grid-template-rows: auto auto auto auto; gap: 3px; }
+    .portfolio__grid { display: grid; grid-template-columns: 1fr 2fr 1fr; grid-template-rows: auto auto; gap: 3px; }
     .portfolio__item { background: var(--off); position: relative; overflow: hidden; aspect-ratio: 4/3; }
-    .portfolio__img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
+    .portfolio__item-overlay .portfolio__item-tag {
+      color: #ffffff;
+      opacity: 0.9;
     }
-    .portfolio__item-overlay {
-      position: absolute;
-      inset: 0;
-      background: rgba(0,0,0,0.5);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      opacity: 0;
-      transition: opacity .3s;
+    .portfolio__item-overlay .portfolio__item-title {
+      color: #ffffff;
+      opacity: 1;
     }
-    .portfolio__item:hover .portfolio__item-overlay { opacity: 1; }
     .portfolio__item:nth-child(2) { grid-row: span 2; aspect-ratio: unset; }
-    .portfolio__item:nth-child(7) { grid-row: span 2; aspect-ratio: unset; }
     .portfolio__item-placeholder {
       width:100%;height:100%;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-end;
       padding:1.8rem;background:linear-gradient(135deg,var(--off) 0%,rgba(14,14,14,0.03) 100%);
@@ -342,7 +331,7 @@
       .quality__layout { grid-template-columns: 1fr; gap: 3rem; }
       .process__steps { flex-direction: column; }
       .process__steps::before { display: none; }
-      .portfolio__grid { grid-template-columns: 1fr 2fr 1fr; }
+      .portfolio__grid { grid-template-columns: 1fr 1fr; }
       .portfolio__item:nth-child(2) { grid-column: span 2; }
       nav .nav__links { display: none; }
     }
@@ -376,7 +365,7 @@
       <em>is a commitment.</em>
     </h1>
     <div class="hero__sub">
-      <p class="hero__subtext">모든 마감은 약속입니다.<br>GRIDIC Construction은 도면 위의 상상을<br>오차 없는 디테일로 완성합니다.</p>
+      <p class="hero__subtext">모든 마감은 약속입니다.<br>우리는 도면 위의 상상을<br>오차 없는 디테일로 완성합니다.</p>
       <a href="#contact" class="hero__cta">
         <div class="hero__cta-line"></div>
         시공 문의하기
@@ -414,8 +403,8 @@
       완공된 공간의 디테일이 우리의 포트폴리오입니다.</em>
     </p>
     <p class="identity__footnote">
-      설립 2026.03 · 서울특별시 광진구 천호대로101길 43<br>
-      공간 시공 · 현장 디테일 설계 · 퀄리티 컨트롤 · 현장 운영
+      분야 <br>
+      건축·설비 - 산업·물류 시설 - 종합 실내건축 - 상업·주거 인테리어
     </p>
   </section>
 
@@ -485,7 +474,7 @@
       <div class="process__step">
         <p class="process__step-num">01 · Briefing</p>
         <h4 class="process__step-title">설계 도면<br>검토 & 브리핑</h4>
-        <p class="process__step-desc">Creative 파트의 설계 의도를<br>완벽히 이해하고 시공 계획을 수립합니다.</p>
+        <p class="process__step-desc">설계 의도를 완벽히 이해하고<br>시공 계획을 수립합니다.</p>
       </div>
       <div class="process__step">
         <p class="process__step-num">02 · Planning</p>
@@ -509,63 +498,66 @@
   <section class="portfolio pad reveal" id="portfolio">
     <div class="portfolio__intro">
       <h2 class="portfolio__heading">Completed<br>Projects</h2>
-      <p class="portfolio__note">포트폴리오 이미지는<br>프로젝트 진행 후 업데이트 예정입니다.</p>
+      <p class="portfolio__note">포트폴리오의 작업물은<br>모두 실제 진행한 프로젝트 입니다.</p>
     </div>
     <div class="portfolio__grid">
       <div class="portfolio__item">
-        <img src="images/portfolio/project01.png" alt="High-end Interior Build" class="portfolio__img" />
-        <div class="portfolio__item-overlay">
+        <div class="portfolio__item-placeholder">
           <div class="portfolio__item-cross"></div>
-          <span class="portfolio__item-tag">Space Build · 2026</span>
+          <span class="portfolio__item-tag">Space Build · from 2015</span>
           <span class="portfolio__item-title">High-end Interior Build</span>
         </div>
       </div>
       <div class="portfolio__item">
-        <img src="images/portfolio/project02.png" alt="Precision Finish" class="portfolio__img" />
-        <div class="portfolio__item-overlay">
+        <div class="portfolio__item-placeholder">
           <div class="portfolio__item-cross"></div>
-          <span class="portfolio__item-tag">Detail Engineering · 2026</span>
-          <span class="portfolio__item-title">Precision Finish — Coming Soon</span>
+          <span class="portfolio__item-tag">Detail Engineering · from 2015</span>
+          <span class="portfolio__item-title">Precision Finish</span>
         </div>
       </div>
       <div class="portfolio__item">
-        <img src="images/portfolio/project03.jpg" alt="Full-scale Construction" class="portfolio__img" />
-        <div class="portfolio__item-overlay">
+        <div class="portfolio__item-placeholder">
           <div class="portfolio__item-cross"></div>
-          <span class="portfolio__item-tag">Site Operations · 2026</span>
+          <span class="portfolio__item-tag">Site Operations · from 2015</span>
           <span class="portfolio__item-title">Full-scale Construction</span>
         </div>
       </div>
       <div class="portfolio__item">
-        <img src="images/portfolio/project04.jpg" alt="Quality Controlled" class="portfolio__img" />
-        <div class="portfolio__item-overlay">
+        <div class="portfolio__item-placeholder">
           <div class="portfolio__item-cross"></div>
-          <span class="portfolio__item-tag">DQC · 2026</span>
+          <span class="portfolio__item-tag">DQC · from 2015</span>
           <span class="portfolio__item-title">Quality Controlled</span>
         </div>
       </div>
       <div class="portfolio__item">
-        <img src="images/portfolio/project05.jpg" alt="End-to-End Project" class="portfolio__img" />
-        <div class="portfolio__item-overlay">
+        <div class="portfolio__item-placeholder">
           <div class="portfolio__item-cross"></div>
-          <span class="portfolio__item-tag">Integrated · 2026</span>
+          <span class="portfolio__item-tag">Integrated · from 2015</span>
           <span class="portfolio__item-title">End-to-End Project</span>
         </div>
       </div>
       <div class="portfolio__item">
-        <img src="images/portfolio/project06.jpg" alt="Project 6" class="portfolio__img" />
+        <img src="images/portfolio/project08.jpg" alt="Project 8" class="portfolio__img" />
         <div class="portfolio__item-overlay">
           <div class="portfolio__item-cross"></div>
-          <span class="portfolio__item-tag">Category · 2026</span>
-          <span class="portfolio__item-title">Project Title 6</span>
+          <span class="portfolio__item-tag">Category · from 2015</span>
+          <span class="portfolio__item-title">More Projects</span>
         </div>
       </div>
       <div class="portfolio__item">
-        <img src="images/portfolio/project07.jpg" alt="Project 7" class="portfolio__img" />
+        <img src="images/portfolio/project09.jpg" alt="Project 9" class="portfolio__img" />
         <div class="portfolio__item-overlay">
           <div class="portfolio__item-cross"></div>
-          <span class="portfolio__item-tag">Category · 2026</span>
-          <span class="portfolio__item-title">Project Title 7</span>
+          <span class="portfolio__item-tag">Category · from 2015</span>
+          <span class="portfolio__item-title">More Projects</span>
+        </div>
+      </div>
+      <div class="portfolio__item">
+        <img src="images/portfolio/project10.jpg" alt="Project 10" class="portfolio__img" />
+        <div class="portfolio__item-overlay">
+          <div class="portfolio__item-cross"></div>
+          <span class="portfolio__item-tag">Category · from 2015</span>
+          <span class="portfolio__item-title">More Projects</span>
         </div>
       </div>
     </div>
@@ -576,35 +568,35 @@
     <p class="section__label">Contact Us</p>
     <h2 class="contact__heading">Let's Build<br>Something <span>Extraordinary.</span></h2>
     <p class="contact__sub">프로젝트 규모와 방향성에 관계없이<br>GRIDIC은 언제나 대화로 시작합니다.</p>
-    <form class="contact__form" action="https://formspree.io/f/xkopzdkn" method="POST">
+    <form class="contact__form" onsubmit="return false;">
       <div class="form__row">
         <div class="form__field">
           <label class="form__label">Name · 성함</label>
-          <input class="form__input" type="text" name="name" placeholder="홍길동" required />
+          <input class="form__input" type="text" placeholder="홍길동" />
         </div>
         <div class="form__field">
           <label class="form__label">Contact · 연락처</label>
-          <input class="form__input" type="tel" name="contact" placeholder="010-0000-0000" required />
+          <input class="form__input" type="tel" placeholder="010-0000-0000" />
         </div>
       </div>
       <div class="form__field">
         <label class="form__label">E-mail · 이메일</label>
-        <input class="form__input" type="email" name="email" placeholder="hello@example.com" required />
+        <input class="form__input" type="email" placeholder="hello@example.com" />
       </div>
       <div class="form__field">
         <label class="form__label">Inquiry Type · 문의 유형</label>
-        <select class="form__select" name="inquiry_type" required>
+        <select class="form__select">
           <option value="">선택해 주세요</option>
-          <option>Creative 기획 문의</option>
+          <option>Creative 기획/디자인 문의</option>
           <option>Construction 시공 문의</option>
           <option>통합 프로젝트 문의</option>
         </select>
       </div>
       <div class="form__field">
         <label class="form__label">Project Brief · 프로젝트 개요</label>
-        <textarea class="form__textarea" name="project_brief" placeholder="시공 규모, 현장 위치, 희망 일정 등을 자유롭게 공유해 주세요." required></textarea>
+        <textarea class="form__textarea" placeholder="시공 규모, 현장 위치, 희망 일정 등을 자유롭게 공유해 주세요."></textarea>
       </div>
-      <button class="form__submit" type="submit">Send Your Vision <span>→</span></button>
+      <button class="form__submit">Send Your Vision <span>→</span></button>
     </form>
   </section>
 
