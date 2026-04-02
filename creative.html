@@ -357,6 +357,24 @@
       aspect-ratio: 4/3;
       cursor: none;
     }
+    .portfolio__img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .portfolio__item-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      transition: opacity .3s;
+    }
+    .portfolio__item:hover .portfolio__item-overlay { opacity: 1; }
     .portfolio__item:first-child {
       grid-row: span 2;
       aspect-ratio: unset;
@@ -639,7 +657,8 @@
     </div>
     <div class="portfolio__grid">
       <div class="portfolio__item">
-        <div class="portfolio__item-placeholder">
+        <img src="images/portfolio/project1.jpg" alt="Space Branding Project" class="portfolio__img" />
+        <div class="portfolio__item-overlay">
           <div class="portfolio__item-cross"></div>
           <span class="portfolio__item-tag">Brand Identity · 2026</span>
           <span class="portfolio__item-title">Space Branding — Coming Soon</span>
@@ -681,7 +700,7 @@
     <p class="section__label">Contact Us</p>
     <h2 class="contact__heading">Let's Build<br>Something <span>Extraordinary.</span></h2>
     <p class="contact__sub">프로젝트 규모와 방향성에 관계없이<br>GRIDIC은 언제나 대화로 시작합니다.</p>
-    <form class="contact__form" action="https://formspree.io/f/mnjozeov" method="POST">
+    <form class="contact__form" action="https://formspree.io/f/xkopzdkn" method="POST">
       <div class="form__row">
         <div class="form__field">
           <label class="form__label">Name · 성함</label>
